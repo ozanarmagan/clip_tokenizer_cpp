@@ -150,7 +150,7 @@ CLIPTokenizer::CLIPTokenizer(const std::string& vocab_file) {
     auto merges = get_merges(vocab_file);
     auto bytes_to_unicode_vec = get_bytes_to_unicode_vec();
     for(const auto& v : get_bytes_to_unicode_vec()) {
-        vocab.push_back(icu::UnicodeString(v));
+        vocab.push_back(std::move(icu::UnicodeString(v)));
     }
 
     for(const auto& val : vocab) {
