@@ -303,6 +303,9 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
             }
         }
     }
+
+    delete strip_accents;
+
     return bpe_tokens;
 }
 
