@@ -148,6 +148,7 @@ CLIPTokenizer::CLIPTokenizer(const std::string& vocab_file) {
         byte_decoder[it.second] = it.first;
     }
     auto merges = get_merges(vocab_file);
+    auto bytes_to_unicode_vec = get_bytes_to_unicode_vec();
     for(const auto& v : get_bytes_to_unicode_vec()) {
         vocab.push_back(icu::UnicodeString(v));
     }
@@ -268,6 +269,7 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
     }
     unicode_text = tokenize_chinese(unicode_text);
     unicode_text.toLower();
+    unicode_text.trim();
     icu::UnicodeString word;
     size_t start = 0;
     matcher->reset(unicode_text);
