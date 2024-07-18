@@ -297,9 +297,8 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
             encoder_result += byte_encoder[(int)(word_str[j] & 0xff)];
         }
         auto bpe_res = bpe(encoder_result);
-        for (auto& token : bpe_res) {
+        for (auto& token : bpe_res) {;
             if(bpe_tokens.size() >= MAX_LEN - 1) {
-                bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
                 break;
             } else if (encoder.find(token) == encoder.end()) {
                 bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
@@ -307,6 +306,10 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
                 bpe_tokens.push_back(encoder[token]);
             }
         }
+    }
+
+    if (bpe_tokens.back() != encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]) {
+        bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
     }
 
     delete strip_accents;
