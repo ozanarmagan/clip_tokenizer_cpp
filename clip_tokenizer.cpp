@@ -265,6 +265,7 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
             status = U_ZERO_ERROR;
         } else {
             std::cout << "Error: " << u_errorName(status) << std::endl;
+            bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
             return bpe_tokens;
         }
     }
@@ -281,6 +282,7 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
                 status = U_ZERO_ERROR;
             } else {
                 std::cout << "Error: " << u_errorName(status) << std::endl;
+                bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
                 return bpe_tokens;
             }
         }
@@ -296,7 +298,10 @@ std::vector<int> CLIPTokenizer::encode(icu::UnicodeString unicode_text) {
         }
         auto bpe_res = bpe(encoder_result);
         for (auto& token : bpe_res) {
-            if (encoder.find(token) == encoder.end()) {
+            if(bpe_tokens.size() >= MAX_LEN - 1) {
+                bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
+                break;
+            } else if (encoder.find(token) == encoder.end()) {
                 bpe_tokens.push_back(encoder[icu::UnicodeString::fromUTF8("<|endoftext|>")]);
             } else {
                 bpe_tokens.push_back(encoder[token]);

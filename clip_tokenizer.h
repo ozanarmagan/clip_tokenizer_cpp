@@ -55,6 +55,7 @@ class CLIPTokenizer {
         std::unordered_map<int, icu::UnicodeString, std::hash<icu::UnicodeString>> decoder;
         UErrorCode status = U_ZERO_ERROR;
         std::vector<int> encode(icu::UnicodeString text);
+        size_t MAX_LEN = 77;
     public:
         CLIPTokenizer(const std::string& vocab_file);
         TokenizerResult tokenize(const std::vector<std::string>& texts);
